@@ -17,9 +17,9 @@ public:
 
 private slots:
 
-    void on_CalculateButton_pressed();
+    bool on_CalculateButton_pressed();
 
-    void on_CalculateButton_released();
+    void on_CalculateButton_released(bool calculationOK);
 
     void on_BillAmount_returnPressed();
 

@@ -15,22 +15,41 @@ MainWindow::MainWindow(QWidget *parent)
     ui->BillAmount->setFocus();
 }
 
-void MainWindow::on_CalculateButton_pressed()
+bool MainWindow::on_CalculateButton_pressed()
 {
+
+    bool billOK = false;        //to check if toDouble worked. If not we prompt the user to enter valid input
+    bool tipOk = false;         //to check if toDouble worked. If not we prompt the user to enter valid input
+
+
     QString billValue = ui->BillAmount->text();
-    billAmount = billValue.toDouble();
+    billAmount = billValue.toDouble(&billOK);
 
     QString tipPerc = ui->TipPecentage->text();
-    tipPercentage=tipPerc.toDouble();
+    tipPercentage=tipPerc.toDouble(&tipOk);
 
-    tipAmount=(billAmount*tipPercentage)/100;
-    totalAmount=billAmount+tipAmount;
+    if (billOK&&tipOk)
+    {
+        tipAmount=(billAmount*tipPercentage)/100;
+        totalAmount=billAmount+tipAmount;
+        return true;
+    }
+
+    return false;
 }
 
-void MainWindow::on_CalculateButton_released()
+void MainWindow::on_CalculateButton_released(bool calculationOK)
 {
-    QString finalText = "Tip amount is "+ QString::number( tipAmount) +". \nTotal payable amount "+QString::number(totalAmount) +".";
-    ui->FinalDisplayText->setText(finalText);
+    if(calculationOK)
+    {
+        QString finalText = "Tip amount is "+ QString::number( tipAmount) +". \nTotal payable amount "+QString::number(totalAmount) +".";
+        ui->FinalDisplayText->setText(finalText);
+    }
+    else
+    {
+        QString finalText = "Invalid Input. Please Try Again.";
+        ui->FinalDisplayText->setText(finalText);
+    }
 }
 
 void MainWindow::on_BillAmount_returnPressed()
@@ -41,8 +60,8 @@ void MainWindow::on_BillAmount_returnPressed()
 void MainWindow::on_TipPecentage_returnPressed()
 {
     ui->BillAmount->setFocus();
-    on_CalculateButton_pressed();
-    on_CalculateButton_released();
+
+    on_CalculateButton_released(on_CalculateButton_pressed());
 }
 
 
