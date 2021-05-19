@@ -13,9 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->BillAmount->setFocus();
+    bCalculationOk = false;
 }
 
-bool MainWindow::on_CalculateButton_pressed()
+void MainWindow::on_CalculateButton_pressed()
 {
 
     bool billOK = false;        //to check if toDouble worked. If not we prompt the user to enter valid input
@@ -32,21 +33,24 @@ bool MainWindow::on_CalculateButton_pressed()
     {
         tipAmount=(billAmount*tipPercentage)/100;
         totalAmount=billAmount+tipAmount;
-        return true;
+        bCalculationOk = true;
+        return;
     }
 
-    return false;
+    bCalculationOk = false;
+    return;
 }
 
-void MainWindow::on_CalculateButton_released(bool calculationOK)
+void MainWindow::on_CalculateButton_released()
 {
-    if(calculationOK)
+    if(bCalculationOk)
     {
         QString finalText = "Tip amount is "+ QString::number( tipAmount) +". \nTotal payable amount "+QString::number(totalAmount) +".";
         ui->FinalDisplayText->setText(finalText);
     }
     else
     {
+
         QString finalText = "Invalid Input. Please Try Again.";
         ui->FinalDisplayText->setText(finalText);
     }
@@ -61,7 +65,8 @@ void MainWindow::on_TipPecentage_returnPressed()
 {
     ui->BillAmount->setFocus();
 
-    on_CalculateButton_released(on_CalculateButton_pressed());
+    on_CalculateButton_pressed();
+    on_CalculateButton_released();
 }
 
 

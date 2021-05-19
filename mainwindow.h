@@ -15,11 +15,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    bool bCalculationOk;
+
 private slots:
 
-    bool on_CalculateButton_pressed();
+    void on_CalculateButton_pressed();
 
-    void on_CalculateButton_released(bool calculationOK);
+    void on_CalculateButton_released();
 
     void on_BillAmount_returnPressed();
 
